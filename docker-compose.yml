@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq
+    ports:
+      - 5672:5672
+  php:
+    container_name: php-swoole
+    image: phpswoole/swoole
+    command: php index.php
+    ports:
+    - 9501:9501
+    volumes:
+    - ./:/app
+    working_dir: /app
