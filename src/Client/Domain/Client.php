@@ -8,7 +8,8 @@ class Client
 {
     public function __construct(
         private Document $document,
-        private CardInformation $cardInfo
+        private CardInformation $cardInfo,
+        private Email $email
     ) {
     }
 
@@ -20,5 +21,10 @@ class Client
     public function documentNumber(): string
     {
         return $this->document;
+    }
+
+    public function email(): string
+    {
+        return $this->email;
     }
 }
