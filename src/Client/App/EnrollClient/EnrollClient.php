@@ -32,6 +32,7 @@ class EnrollClient
 
         $this->clientRepository->add($client);
 
-        $this->messagingQueue->send('client_enrolled', 'alura-ms');
+        $this->messagingQueue->send('client_enrolled', 'alura-mkt');
+        $this->messagingQueue->send('client_enrolled', 'alura-academico');
     }
 }
