@@ -3,7 +3,9 @@
 use Alura\Financeiro\Client\Domain\ClientRepository;
 use Alura\Financeiro\Client\Infra\PdoPostgreClientRepository;
 use Alura\Financeiro\Shared\App\MessagingQueue;
+use Alura\Financeiro\Shared\App\Scheduler;
 use Alura\Financeiro\Shared\Infra\RabbitMQMessagingQueue;
+use Alura\Financeiro\Shared\Infra\SwooleTaskScheduler;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use function DI\{create, factory, get};
 
@@ -18,6 +20,7 @@ $builder->addDefinitions([
     AMQPStreamConnection::class => create()->constructor('rabbitmq', 5672, 'guest', 'guest'),
     MessagingQueue::class => get(RabbitMQMessagingQueue::class),
     ClientRepository::class => get(PdoPostgreClientRepository::class),
+    Scheduler::class => get(SwooleTaskScheduler::class),
 ]);
 
 return $builder->build();
