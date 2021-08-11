@@ -10,6 +10,7 @@ use Alura\Financeiro\Client\Domain\Card\SecurityCode;
 use Alura\Financeiro\Client\Domain\Client;
 use Alura\Financeiro\Client\Domain\ClientRepository;
 use Alura\Financeiro\Client\Domain\Document;
+use Alura\Financeiro\Client\Domain\Email;
 use Alura\Financeiro\Shared\App\MessagingQueue;
 
 class EnrollClient
@@ -27,7 +28,8 @@ class EnrollClient
             new CardExpirationDate($data->cardExpirationMonth, $data->cardExpirationYear),
             new SecurityCode($data->cardSecurityCode),
         );
-        $client = new Client($document, $cardInfo);
+        $email = new Email($data->email);
+        $client = new Client($document, $cardInfo, $email);
         // Pagamento em si
 
         $this->clientRepository->add($client);

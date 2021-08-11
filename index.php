@@ -2,28 +2,37 @@
 
 require_once 'vendor/autoload.php';
 
-use Alura\Financeiro\Client\App\EnrollClient\EnrollClient;
-use Alura\Financeiro\Client\App\EnrollClient\EnrollClientInputData;
-use Siler\Swoole;
-use Siler\Route;
-use Siler\Http\Request;
+use Alura\Financeiro\Client\App\EnrollClient\{EnrollClient, EnrollClientInputData};
+use Psr\Container\ContainerInterface;
+use Swoole\Http\{Request, Response, Server};
 
-$handler = function () {
-    try {
-        /** @var \Psr\Container\ContainerInterface $container */
-        $container = require_once 'di.php';
+/** @var ContainerInterface $container */
+$container = require_once 'di.php';
 
-        Swoole\cors();
-        Route\post('/clients', function () use ($container) {
-            $inputData = EnrollClientInputData::fromArray(Request\json());
-            $enrollClient = $container->get(EnrollClient::class);
-            $enrollClient($inputData);
-            Swoole\emit('', 201);
-        });
-        Swoole\emit('Not found', 404);
-    } catch (Throwable $e) {
-        Swoole\emit($e->getMessage(), 500);
+$server = new Server('0.0.0.0', 9501);
+$server->on('request', function (Request $request, Response $response) use ($container) {
+    $response->header('Access-Control-Allow-Origin', '*');
+    $response->header('Access-Control-Allow-Headers', 'Content-Type');
+    $response->header('Access-Control-Allow-Methods', 'OPTIONS, POST');
+
+    if ($request->getMethod() === 'OPTIONS') {
+        $response->setStatusCode(204);
+        return;
     }
-};
 
-Swoole\http($handler)->start();
+    $path = $request->server['path_info'] ?? '/';
+
+    if ($request->getMethod() !== 'POST' || $path !== '/clients') {
+        $response->setStatusCode(404);
+        return;
+    }
+
+    $inputData = EnrollClientInputData::fromArray(json_decode($request->rawContent(), true));
+    $enrollClient = $container->get(EnrollClient::class);
+    $enrollClient($inputData);
+
+    $response->setStatusCode(201);
+    $response->end();
+});
+
+$server->start();

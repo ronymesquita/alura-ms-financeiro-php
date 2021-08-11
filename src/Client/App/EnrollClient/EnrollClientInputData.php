@@ -11,6 +11,7 @@ class EnrollClientInputData
         public string $cardExpirationMonth,
         public string $cardExpirationYear,
         public string $cardSecurityCode,
+        public string $email,
     ) {
     }
 
@@ -23,6 +24,7 @@ class EnrollClientInputData
             $data['cardExpirationMonth'],
             $data['cardExpirationYear'],
             $data['cardSecurityCode'],
+            $data['email'],
         );
     }
 }
