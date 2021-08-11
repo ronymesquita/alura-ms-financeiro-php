@@ -34,15 +34,13 @@ class EnrollClient
 
         $this->clientRepository->add($client);
 
-        $this->messagingQueue->send(json_encode(['msg' => 'client_enrolled', 'data' => ['email' => $client->email()]]), 'alura-mkt');
         $this->messagingQueue->send(
             json_encode([
-                'msg' => 'client_enrolled',
-                'data' => [
-                    ['name' => $client->fullName(), 'email' => $client->email()]
-                ]
+                'cpf' => $client->documentNumber(),
+                'name' => $client->fullName(),
+                'email' => $client->email(),
             ]),
-            'alura-academico'
+            'client_enrolled'
         );
     }
 }

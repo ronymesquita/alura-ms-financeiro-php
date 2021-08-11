@@ -17,8 +17,7 @@ class RabbitMQMessagingQueue implements \Alura\Financeiro\Shared\App\MessagingQu
 
     public function send(string $message, string $queue): void
     {
-        $this->channel->queue_declare($queue, auto_delete: false);
-        $this->channel->basic_publish(new AMQPMessage($message), '', $queue);
+        $this->channel->basic_publish(new AMQPMessage($message), $queue);
     }
 
     public function __destruct()
