@@ -1,6 +1,6 @@
 FROM php
 
-RUN docker-php-ext-install zip
+RUN apt-get update && apt-get install -y libzip-dev && docker-php-ext-install zip
 RUN docker-php-ext-install sockets
 
 RUN pecl install swoole
