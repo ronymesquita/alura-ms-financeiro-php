@@ -1,5 +1,6 @@
 FROM php
 
+RUN docker-php-ext-install zip
 RUN docker-php-ext-install sockets
 
 RUN pecl install swoole
