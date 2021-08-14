@@ -6,11 +6,12 @@ services:
     ports:
       - 5672:5672
   php:
-    container_name: php-swoole
-    image: phpswoole/swoole
+    build: .
     command: php index.php
     ports:
-    - 9501:9501
+      - 9501:9501
     volumes:
-    - ./:/app
+      - ./financeiro-php:/app
     working_dir: /app
+    depends_on:
+      - rabbitmq
